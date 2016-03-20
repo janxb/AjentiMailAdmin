@@ -20,17 +20,18 @@ class Config
             Config::beautify_json(json_encode(Config::$mailconfig, JSON_UNESCAPED_SLASHES)));
     }
 
-    private function beautify_json($json) {
+    private function beautify_json($json)
+    {
 
-        $result      = '';
-        $pos         = 0;
-        $strLen      = strlen($json);
-        $indentStr   = '  ';
-        $newLine     = "\n";
-        $prevChar    = '';
+        $result = '';
+        $pos = 0;
+        $strLen = strlen($json);
+        $indentStr = '  ';
+        $newLine = "\n";
+        $prevChar = '';
         $outOfQuotes = true;
 
-        for ($i=0; $i<=$strLen; $i++) {
+        for ($i = 0; $i <= $strLen; $i++) {
 
             // Grab the next character in the string.
             $char = substr($json, $i, 1);
@@ -41,10 +42,10 @@ class Config
 
                 // If this character is the end of an element,
                 // output a new line and indent the next line.
-            } else if(($char == '}' || $char == ']') && $outOfQuotes) {
+            } else if (($char == '}' || $char == ']') && $outOfQuotes) {
                 $result .= $newLine;
-                $pos --;
-                for ($j=0; $j<$pos; $j++) {
+                $pos--;
+                for ($j = 0; $j < $pos; $j++) {
                     $result .= $indentStr;
                 }
             }
@@ -57,7 +58,7 @@ class Config
             if (($char == ',' || $char == '{' || $char == '[') && $outOfQuotes) {
                 $result .= $newLine;
                 if ($char == '{' || $char == '[') {
-                    $pos ++;
+                    $pos++;
                 }
 
                 for ($j = 0; $j < $pos; $j++) {
@@ -71,5 +72,3 @@ class Config
         return $result;
     }
 }
-
-?>

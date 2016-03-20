@@ -8,7 +8,7 @@ class Response
 
     public function __construct($data = null)
     {
-        $this->data = isset($data) ? $data : null;
+        $this->data = $data;
     }
 
     public function send()
@@ -21,5 +21,3 @@ class Response
         echo json_encode($this);
     }
 }
-
-?>
