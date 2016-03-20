@@ -1,24 +1,23 @@
 <?php
-$config;
-$mailconfig;
 
 class Config
 {
+    public static $config;
+    public static $mailconfig;
+
     public static function load()
     {
-        global $config, $mailconfig;
-
-        if ($config == null) {
-            $config = json_decode(file_get_contents(dirname(__FILE__) . '/config.json'));
-            $config->mailconfig = dirname(__FILE__) . '/' . $config->mailconfig;
-            $mailconfig = json_decode(file_get_contents($config->mailconfig));
+        if (Config::$config == null) {
+            Config::$config = json_decode(file_get_contents(dirname(__FILE__) . '/../config.json'));
+            Config::$config->mailconfig = dirname(__FILE__) . '/../' . Config::$config->mailconfig;
+            Config::$mailconfig = json_decode(file_get_contents(Config::$config->mailconfig));
         }
     }
 
     public static function save()
     {
-        global $config, $mailconfig;
-        file_put_contents($config->mailconfig, Config::beautify_json(json_encode($mailconfig, JSON_UNESCAPED_SLASHES)));
+        file_put_contents(Config::$config->mailconfig,
+            Config::beautify_json(json_encode(Config::$mailconfig, JSON_UNESCAPED_SLASHES)));
     }
 
     private function beautify_json($json) {

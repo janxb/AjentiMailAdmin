@@ -5,7 +5,7 @@
     $targets = array();
     $response = new Response();
 
-    foreach ($mailconfig->forwarding_mailboxes as $mailbox){
+    foreach (Config::$mailconfig->forwarding_mailboxes as $mailbox){
         $mailbox_email = $mailbox->local . '@' . $mailbox->domain;
         if ($mailbox_email == $owner_email){
             foreach ($mailbox->targets as $target) {
