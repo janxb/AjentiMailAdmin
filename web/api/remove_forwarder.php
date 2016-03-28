@@ -5,13 +5,22 @@ $owner_email = $_GET['email'];
 $target = new stdClass;
 $target->email = $_GET['target'];
 
-$response = new Response();
+if (!isset($owner_email, $target->email)) {
+    die("missing_parameters");
+}
 
-foreach (Config::$mailconfig->forwarding_mailboxes as $mailbox){
+$response = new Response();
+$mailfound = false;
+
+foreach (Config::$mailconfig->forwarding_mailboxes as $mailbox) {
     $mailbox_email = $mailbox->local . '@' . $mailbox->domain;
-    if ($mailbox_email == $owner_email){
-        if ($key = array_search($target, $mailbox->targets) !== false) {
-            unset($mailbox->targets[$key]);
+    if ($mailbox_email == $owner_email) {
+        $target_key = array_search($target, $mailbox->targets);
+        if ($target_key !== false) {
+            $response->data = $mailbox->targets[$target_key];
+            unset($mailbox->targets[$target_key]);
+            $mailfound = true;
+
             $mailbox->targets = array_values($mailbox->targets);
         } else {
             $response->error = 'forwarding_address_not_found';
@@ -19,5 +28,9 @@ foreach (Config::$mailconfig->forwarding_mailboxes as $mailbox){
     }
 }
 
-Config::save();
+if ($mailfound) {
+    Config::save();
+} else {
+    $response->error = 'address_not_found';
+}
 $response->send();

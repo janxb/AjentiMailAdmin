@@ -5,6 +5,7 @@ class Response
     public $status = 200;
     public $error;
     public $data;
+    public $timestamp;
 
     public function __construct($data = null)
     {
@@ -17,6 +18,7 @@ class Response
             $this->status = 500;
         }
 
+        $this->timestamp = time();
         http_response_code($this->status);
         echo json_encode($this);
     }
