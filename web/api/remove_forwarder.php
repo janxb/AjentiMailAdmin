@@ -19,7 +19,6 @@ foreach (Config::$mailconfig->forwarding_mailboxes as $mailbox) {
             Response::$data = $mailbox->targets[$target_key];
             unset($mailbox->targets[$target_key]);
             $mailfound = true;
-
             $mailbox->targets = array_values($mailbox->targets);
         } else {
             Response::$error = 'forwarding_address_not_found';

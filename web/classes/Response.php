@@ -15,7 +15,7 @@ class Response implements JsonSerializable
     public static function send()
     {
         if (self::$error != null) {
-            self::$status = 500;
+            self::$status = 200;
         }
 
         self::$timestamp = time();

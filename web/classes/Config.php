@@ -22,6 +22,10 @@ class Config
     private static function remote_load()
     {
         $output = self::remote_command('getConfig ' . self::$config->mailconfig);
+		if ($output[0] !== '{'){
+			Response::$error = 'remote_error';
+			Response::$data = $output;
+		}
         return $output;
     }
 
