@@ -1,0 +1,56 @@
+<html>
+	<head>
+		<title>AjentiMailAdmin</title>
+		<link rel="stylesheet" href="index.css"/>
+	</head>
+	<body>
+		<div data-bind="visible:!authenticated()" class="loginwindow">
+			<p data-bind="text:lang().logintext"></p>
+			<form data-bind="submit:_checkLogin">
+				<input data-bind="attr: { placeholder:lang().email }, textInput: email" name="email">
+				<input data-bind="attr: { placeholder:lang().password }, textInput: password" name="password" type="password">
+				<input data-bind="value:lang().login" type="submit">
+			</form>
+
+		</div>
+
+		<div data-bind="visible:authenticated()" class="appwindow">
+			<b data-bind="text:lang().forwarders"></b><br>
+			<div data-bind="visible:forwardersEnabled()">
+				<table>
+					<tbody data-bind="foreach:forwarders()">
+						<tr>
+							<td data-bind="text:$data"></td>
+							<td>
+								<button data-bind="click:$parent._deleteForwarder, text:$parent.lang().delete"></button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				&mdash;&mdash;<br>
+				<form data-bind="submit:_addForwarder">
+					<input data-bind="value:newforwarder">
+					<input data-bind="value:lang().save" type="submit">
+				</form>
+			</div>
+			<p data-bind="visible:!forwardersEnabled(), text:lang().forwardersdisabled"></p>
+
+			<br><br>
+			<b data-bind="text:lang().changepassword"></b>
+			<form data-bind="submit:_changePassword">
+				<input name="newpass1" type="password"
+					   data-bind="attr: { placeholder:lang().newpass1 }, value:newpass1">
+				<input name="newpass2" type="password"
+					   data-bind="attr: { placeholder:lang().newpass2 }, value:newpass2">
+				<input data-bind="value:lang().save" type="submit">
+			</form>
+		</div>
+
+		<div data-bind="visible:loading()" class="loadingwindow">
+
+		</div>
+
+		<script src="//cdn.jsdelivr.net/g/jquery@2.2.2,knockout@3.4.0"></script>
+		<script src="index.js"></script>
+	</body>
+</html>
