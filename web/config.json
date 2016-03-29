@@ -1,6 +1,0 @@
-{
-  "mailconfig":"/etc/ajenti/mail.json",
-  "ssh_host":"localhost:22",
-  "ssh_user":"root",
-  "ssh_pass":"YOURPASSWORD"
-}
