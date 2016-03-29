@@ -1,25 +1,26 @@
 <?php
 
-class Response
+class Response implements JsonSerializable
 {
-    public $status = 200;
-    public $error;
-    public $data;
-    public $timestamp;
+    public static $status = 200;
+    public static $error;
+    public static $data;
+    public static $timestamp;
 
-    public function __construct($data = null)
+    public function jsonSerialize()
     {
-        $this->data = $data;
+        return get_class_vars(get_class($this));
     }
 
-    public function send()
+    public static function send()
     {
-        if ($this->error != null) {
-            $this->status = 500;
+        if (self::$error != null) {
+            self::$status = 500;
         }
 
-        $this->timestamp = time();
-        http_response_code($this->status);
-        echo json_encode($this);
+        self::$timestamp = time();
+        http_response_code(self::$status);
+        echo json_encode(new Response());
+        exit();
     }
 }

@@ -1,12 +1,12 @@
 <?php
-require_once '../index.php';
+require_once '../config.php';
 
-$owner_email = $_GET['email'];
-$password = $_GET['password'];
-$response = new Response;
+$owner_email = $_REQUEST['email'];
+$password = $_REQUEST['password'];
 
-if (!isset($owner_email, $password)){
-    die("missing_parameters");
+if (!isset($owner_email, $password)) {
+    Response::$error = 'missing_parameters';
+    Response::send();
 }
 
 $mailfound = false;
@@ -22,7 +22,7 @@ foreach (Config::$mailconfig->mailboxes as $mailbox) {
 if ($mailfound){
     Config::save();
 } else {
-    $response->error = 'address_not_found';
+    Response::$error = 'address_not_found';
 }
 
-$response->send();
+Response::send();

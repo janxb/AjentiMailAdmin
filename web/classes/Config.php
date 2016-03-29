@@ -9,14 +9,19 @@ class Config
     public static function load()
     {
         if (self::$config == null) {
-            self::$config = json_decode(file_get_contents(dirname(__FILE__) . '/../config.json'));
+            $configFile = dirname(__FILE__) . '/../config.json';
+            if (!file_exists($configFile)){
+                Response::$error = 'no_config_found';
+                Response::send();
+            }
+            self::$config = json_decode(file_get_contents($configFile));
             self::$mailconfig = json_decode(self::remote_load());
         }
     }
 
     private static function remote_load()
     {
-        $output = self::remote_command('sudo cat ' . self::$config->mailconfig);
+        $output = self::remote_command('getConfig ' . self::$config->mailconfig);
         return $output;
     }
 
@@ -25,10 +30,11 @@ class Config
         $ssh = new NET_SSH2(self::$config->ssh_host);
 
         if (!$ssh->login(self::$config->ssh_user, self::$config->ssh_pass)) {
-            return null;
+            Response::$error = 'remote_login_failed';
+            Response::send();
         }
 
-        $output = $ssh->exec("$command");
+        $output = $ssh->exec('sudo ' . Config::$config->api_command . ' ' . $command);
 
         unset($ssh, $command);
         return $output;
@@ -43,9 +49,11 @@ class Config
     private static function remote_save()
     {
         $configString = self::getConfigJson();
-        $output = self::remote_command("echo '$configString' | sudo tee " . self::$config->mailconfig . " > /dev/null");
+        $output = self::remote_command("setConfig '$configString' " . self::$config->mailconfig);
         if ($output != '') {
-            die("Remote Error: $output");
+            Response::$error = 'remote_error';
+            Response::$data = $output;
+            Response::send();
         }
     }
 
@@ -61,9 +69,11 @@ class Config
 
     private static function remote_reload()
     {
-        $output = self::remote_command('sudo ajenti-ipc vmail apply');
+        $output = self::remote_command('reloadConfig');
         if (strpos($output, '200 OK') === -1) {
-            die ("Remote Error: " . $output);
+            Response::$error = 'remote_error';
+            Response::$data = $output;
+            Response::send();
         }
     }
 }

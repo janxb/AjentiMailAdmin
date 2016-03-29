@@ -1,10 +1,14 @@
 <?php
 
-require('../index.php');
-$owner_email = $_GET['email'];
+require('../config.php');
+$owner_email = $_REQUEST['email'];
 
 $targets = array();
-$response = new Response();
+
+if (!isset($owner_email)) {
+    Response::$error = 'missing_parameters';
+    Response::send();
+}
 
 foreach (Config::$mailconfig->forwarding_mailboxes as $mailbox) {
     $mailbox_email = $mailbox->local . '@' . $mailbox->domain;
@@ -16,9 +20,9 @@ foreach (Config::$mailconfig->forwarding_mailboxes as $mailbox) {
 }
 
 if (empty($targets)) {
-    $response->error = "address_not_found";
+    Response::$error = "address_not_found";
 } else {
-    $response->data = $targets;
+    Response::$data = $targets;
 }
 
-$response->send();
+Response::send();

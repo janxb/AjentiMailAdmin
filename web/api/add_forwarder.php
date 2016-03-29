@@ -1,25 +1,25 @@
 <?php
 
-require('../index.php');
-$owner_email = $_GET['email'];
+require('../config.php');
+$owner_email = $_REQUEST['email'];
 $target = new stdClass;
-$target->email = $_GET['target'];
+$target->email = $_REQUEST['forward'];
+
+$mailfound = false;
 
 if (!isset($owner_email, $target->email)) {
-    die("missing_parameters");
+    Response::$error = 'missing_parameters';
+    Response::send();
 }
-
-$response = new Response();
-$mailfound = false;
 
 foreach (Config::$mailconfig->forwarding_mailboxes as $mailbox) {
     $mailbox_email = $mailbox->local . '@' . $mailbox->domain;
     if ($mailbox_email == $owner_email) {
+        $mailfound = true;
         if (!in_array($target, $mailbox->targets)) {
             array_push($mailbox->targets, $target);
-            $mailfound = true;
         } else {
-            $response->error = 'duplicated_forwarding_address';
+            Response::$error = 'duplicated_forwarding_address';
         }
     }
 }
@@ -27,6 +27,6 @@ foreach (Config::$mailconfig->forwarding_mailboxes as $mailbox) {
 if ($mailfound) {
     Config::save();
 } else {
-    $response->error = 'address_not_found';
+    Response::$error = 'address_not_found';
 }
-$response->send();
+Response::send();

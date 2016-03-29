@@ -13,3 +13,7 @@ function __autoload($class_name)
 }
 
 Config::load();
+
+$auth = isset($_REQUEST['auth']) ? $_REQUEST['auth'] : null;
+$email = isset($_REQUEST['email']) ? $_REQUEST['email'] : null;
+Authentication::check($email, $auth);
