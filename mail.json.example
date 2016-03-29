@@ -19,7 +19,7 @@
         {
             "owner": "root", 
             "domain": "example.org", 
-            "local": "catchall", 
+            "local": "foo",
             "targets": [
                 {
                     "email": "foo@example.com"
