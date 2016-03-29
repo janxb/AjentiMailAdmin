@@ -87,6 +87,14 @@ var App = function () {
     }
 
     self._addForwarder = function () {
+        var emailValid = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(self.newforwarder());
+
+
+        if (!emailValid){
+            alert(self.lang().emailnotvalid);
+            return;
+        }
+
         request(
             "/api/add_forwarder.php",
             {
@@ -115,7 +123,7 @@ var english = {
     login: "Login",
     loginfailed: "Can't log in. Maybe you entered the wrong login data?",
     forwarders: "Forwarding adresses",
-    forwardersdisabled:"Mail forwarding is not enabled for your account. Please contact your mail administrator.",
+    forwardersdisabled: "Mail forwarding is not enabled for your account. Please contact your mail administrator.",
     changepassword: "Change mailbox password",
     delete: "Delete",
     logintext: "Please enter your email account login details.",
@@ -126,25 +134,31 @@ var english = {
     save: "Save",
     passwordsmustmatch: "The entered passwords are not the same. Please try again..",
     passwordischanged: "Your password has been changed.",
-    passwordchangefailed: "Can't change your password. Maybe try again later?"
+    passwordchangefailed: "Can't change your password. Maybe try again later?",
+    emailnotvalid:"The entered email address is not valid!"
 }
 
 var german = {
     login: "Login",
     loginfailed: "Anmeldung fehlgeschlagen. Sind die Anmeldedaten korrekt?",
     forwarders: "Email Weiterleitungen",
-    forwardersdisabled:"Email Weiterleitungen sind für den Account nicht aktiviert. Bitte an den Email Administrator wenden.",
+    forwardersdisabled: "Email Weiterleitungen sind für den Account nicht aktiviert. Bitte an den Email Administrator wenden.",
     changepassword: "Account-Passwort ändern",
     delete: "Löschen",
     logintext: "Account Login-Daten eingeben.",
     email: "Email-Adresse",
     password: "Passwort",
     newpass1: "Neues Passwort",
-    newpass2: "Neues Passwort wiederholen",
+    newpass2: "Passwort wiederholen",
     save: "Speichern",
     passwordsmustmatch: "Die beiden Passwörter sind nicht identisch. Bitte erneut versuchen..",
     passwordischanged: "Das Passwort wurde geändert.",
-    passwordchangefailed: "Passwort konnte nicht geändert werden. Bitte später erneut versuchen.."
+    passwordchangefailed: "Passwort konnte nicht geändert werden. Bitte später erneut versuchen..",
+    emailnotvalid:"Die eingegebene Email-Adresse existiert nicht."
 }
+
+$(document).ready(function () {
+    console.log("Document Ready!");
+});
 
 ko.applyBindings(new App());
