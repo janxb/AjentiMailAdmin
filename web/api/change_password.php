@@ -1,5 +1,5 @@
 <?php
-require_once '../config.php';
+require('_bootstrap.inc.php');
 
 $owner_email = $_REQUEST['email'];
 $password = $_REQUEST['password'];

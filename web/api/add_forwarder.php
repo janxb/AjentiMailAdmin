@@ -1,6 +1,6 @@
 <?php
 
-require('../config.php');
+require('_bootstrap.inc.php');
 $owner_email = $_REQUEST['email'];
 $target = new stdClass;
 $target->email = $_REQUEST['forward'];

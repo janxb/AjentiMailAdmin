@@ -10,7 +10,7 @@ class Config
 	public static function load()
 	{
 		if (self::$config == null) {
-			$configFile = dirname(__FILE__) . '/../config.json';
+			$configFile = dirname(__FILE__) . '/../../config.json';
 			if (!file_exists($configFile)) {
 				Response::$error = 'no_config_found';
 				Response::send();
