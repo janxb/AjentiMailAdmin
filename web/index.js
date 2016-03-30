@@ -1,17 +1,35 @@
+var Credentials = function (email, password) {
+    this.email = email;
+    this.password = password;
+}
+
 var App = function () {
     var self = this;
-    self.email = ko.observable("foo@example.org");
-    self.password = ko.observable("myexamplepassword");
+    self.email = ko.observable("");
+    self.password = ko.observable("");
     self.authenticated = ko.observable(false);
     self.loading = ko.observable(false);
     self.forwardersEnabled = ko.observable(false);
     self.forwarders = ko.observableArray([]);
-
-    self.lang = ko.observable(german);
+    self.lang = ko.observable();
 
     self.newpass1 = ko.observable("");
     self.newpass2 = ko.observable("");
     self.newforwarder = ko.observable("");
+
+    self._init = function () {
+        var credentials = Cookies.getJSON("credentials");
+        if (credentials !== undefined) {
+            self.email(credentials.email);
+            self.password(credentials.password);
+            self._checkLogin();
+        }
+    }
+
+    self._logout = function () {
+        Cookies.remove("credentials");
+        location.reload();
+    }
 
     self._checkLogin = function () {
         request(
@@ -23,6 +41,7 @@ var App = function () {
             function (data) {
                 if (data.error === null) {
                     self.authenticated(true);
+                    Cookies.set("credentials", new Credentials(self.email(), self.password()), {expires: 365});
                     self._fetchForwarders();
                 } else {
                     alert(self.lang().loginfailed);
@@ -90,7 +109,7 @@ var App = function () {
         var emailValid = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(self.newforwarder());
 
 
-        if (!emailValid){
+        if (!emailValid) {
             alert(self.lang().emailnotvalid);
             return;
         }
@@ -109,7 +128,6 @@ var App = function () {
     }
 
     var request = function (url, data, responseMethod) {
-        console.log(url + "->");
         console.log(data);
         $.post(url, data, function (data) {
             console.log(data);
@@ -135,7 +153,9 @@ var english = {
     passwordsmustmatch: "The entered passwords are not the same. Please try again..",
     passwordischanged: "Your password has been changed.",
     passwordchangefailed: "Can't change your password. Maybe try again later?",
-    emailnotvalid:"The entered email address is not valid!"
+    emailnotvalid: "The entered email address is not valid!",
+    logout: "Logout",
+    headline:"Email Account Management for adress "
 }
 
 var german = {
@@ -154,11 +174,12 @@ var german = {
     passwordsmustmatch: "Die beiden Passwörter sind nicht identisch. Bitte erneut versuchen..",
     passwordischanged: "Das Passwort wurde geändert.",
     passwordchangefailed: "Passwort konnte nicht geändert werden. Bitte später erneut versuchen..",
-    emailnotvalid:"Die eingegebene Email-Adresse existiert nicht."
+    emailnotvalid: "Die eingegebene Email-Adresse existiert nicht.",
+    logout: "Abmelden",
+    headline:"Email Account-Verwaltung von "
 }
 
-$(document).ready(function () {
-    console.log("Document Ready!");
-});
-
-ko.applyBindings(new App());
+var app = new App();
+app._init();
+app.lang(german);
+ko.applyBindings(app);

@@ -15,6 +15,7 @@
 		</div>
 
 		<div data-bind="visible:authenticated()" class="appwindow">
+			<b><span data-bind="text:lang().headline"></span><span data-bind="text:email()"></span></b><br><br>
 			<b data-bind="text:lang().forwarders"></b><br>
 			<div data-bind="visible:forwardersEnabled()">
 				<table>
@@ -42,13 +43,15 @@
 				<input name="newpass2" type="password" data-bind="attr: { placeholder:lang().newpass2 }, value:newpass2">
 				<input data-bind="value:lang().save" type="submit">
 			</form>
+			<br><br>
+			<button data-bind="click:_logout, text:lang().logout"></button>
 		</div>
 
 		<div data-bind="visible:loading()" class="loadingwindow">
 
 		</div>
 
-		<script src="//cdn.jsdelivr.net/g/jquery@2.2.2,knockout@3.4.0"></script>
+		<script src="//cdn.jsdelivr.net/g/jquery@2.2.2,knockout@3.4.0,js-cookie@2.2.0"></script>
 		<script src="index.js"></script>
 	</body>
 </html>
