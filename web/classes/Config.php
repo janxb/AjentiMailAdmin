@@ -24,8 +24,15 @@ class Config
 	{
 		$output = self::remote_command('getConfig ' . self::$config->mailconfig);
 		if ($output[0] !== '{') {
-			Response::$error = 'remote_error';
-			Response::$data = $output;
+			if (strpos($output, 'no tty present and no askpass program specified') > -1) {
+				Response::$error = 'no_sudo_permissions';
+				Response::$data = 'To fix this Error, add the following Line to your /etc/sudoers file: ' .
+					Config::$config->ssh_user . ' ALL = (ALL:ALL) NOPASSWD:' . Config::$basepath . ' /ssh/*';
+			} else {
+				Response::$error = 'remote_error';
+				Response::$data = $output;
+			}
+			Response::send();
 		}
 		return $output;
 	}

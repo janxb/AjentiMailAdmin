@@ -20,7 +20,7 @@ class Response implements JsonSerializable
 
         self::$timestamp = time();
         http_response_code(self::$status);
-        echo json_encode(new Response());
+        echo json_encode(new Response(), JSON_UNESCAPED_SLASHES);
         exit();
     }
 }
