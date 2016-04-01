@@ -22,7 +22,7 @@ var App = function () {
         if (credentials !== undefined) {
             self.email(credentials.email);
             self.password(credentials.password);
-            self._checkLogin();
+            self._login();
         }
     }
 
@@ -31,9 +31,9 @@ var App = function () {
         location.reload();
     }
 
-    self._checkLogin = function () {
+    self._login = function () {
         request(
-            "/api/authenticate.php",
+            "api/authenticate.php",
             {
                 email: self.email(),
                 auth: self.password()
@@ -51,7 +51,7 @@ var App = function () {
 
     self._fetchForwarders = function () {
         request(
-            "/api/get_forwarders.php",
+            "api/get_forwarders.php",
             {
                 email: self.email(),
                 auth: self.password()
@@ -74,7 +74,7 @@ var App = function () {
         }
 
         request(
-            "/api/change_password.php",
+            "api/change_password.php",
             {
                 email: self.email(),
                 auth: self.password(),
@@ -94,7 +94,7 @@ var App = function () {
 
     self._deleteForwarder = function (forwarder) {
         request(
-            "/api/remove_forwarder.php",
+            "api/remove_forwarder.php",
             {
                 email: self.email(),
                 auth: self.password(),
@@ -115,7 +115,7 @@ var App = function () {
         }
 
         request(
-            "/api/add_forwarder.php",
+            "api/add_forwarder.php",
             {
                 email: self.email(),
                 auth: self.password(),
@@ -128,9 +128,7 @@ var App = function () {
     }
 
     var request = function (url, data, responseMethod) {
-        console.log(data);
         $.post(url, data, function (data) {
-            console.log(data);
             data = $.parseJSON(data);
             responseMethod(data);
         });

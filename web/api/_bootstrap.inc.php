@@ -15,6 +15,8 @@ function __autoload($class_name)
 Config::$basepath = dirname(__FILE__) . '/../../';
 Config::load();
 
-$auth = isset($_REQUEST['auth']) ? $_REQUEST['auth'] : null;
-$email = isset($_REQUEST['email']) ? $_REQUEST['email'] : null;
-Authentication::check($email, $auth);
+Request::$auth = isset($_REQUEST['auth']) ? $_REQUEST['auth'] : null;
+Request::$email = isset($_REQUEST['email']) ? $_REQUEST['email'] : null;
+Request::$data = $_REQUEST;
+
+unset($_REQUEST, $_GET, $_POST);

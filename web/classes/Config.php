@@ -52,7 +52,7 @@ class Config
 		return $output;
 	}
 
-	public function save()
+	public static function save()
 	{
 		self::remote_save();
 		self::reload();
@@ -74,7 +74,7 @@ class Config
 		return JsonFormatter::format(json_encode(self::$mailconfig, JSON_UNESCAPED_SLASHES));
 	}
 
-	public function reload()
+	public static function reload()
 	{
 		self::remote_reload();
 	}
