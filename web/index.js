@@ -128,9 +128,7 @@ var App = function () {
     }
 
     var request = function (url, data, responseMethod) {
-        console.log(data);
         $.post(url, data, function (data) {
-            console.log(data);
             data = $.parseJSON(data);
             responseMethod(data);
         });
