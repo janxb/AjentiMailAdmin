@@ -1,25 +1,20 @@
 <?php
 require('_bootstrap.inc.php');
+Authentication::check();
 
-$owner_email = $_REQUEST['email'];
-$password = $_REQUEST['password'];
+Request::need_parameters('email', 'password');
 
-if (!isset($owner_email, $password)) {
-    Response::$error = 'missing_parameters';
-    Response::send();
-}
-
-$mailfound = false;
+$existing = false;
 
 foreach (Config::$mailconfig->mailboxes as $mailbox) {
     $mailbox_email = $mailbox->local . '@' . $mailbox->domain;
-    if ($mailbox_email == $owner_email) {
-        $mailfound = true;
-        $mailbox->password = $password;
+    if ($mailbox_email == Request::$email) {
+        $existing = true;
+        $mailbox->password = Request::$data['password'];
     }
 }
 
-if ($mailfound){
+if ($existing){
     Config::save();
 } else {
     Response::$error = 'address_not_found';
