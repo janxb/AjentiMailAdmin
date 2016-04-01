@@ -177,6 +177,27 @@ var german = {
     headline:"Email Account-Verwaltung von "
 }
 
+var greek = {
+    login: "Σύνδεση",
+    loginfailed: "Αδυναμία σύνδεσης. Μήπως έχετε δώσει λάθος στοιχεία;",
+    forwarders: "Διευθύνσεις Προώθησης",
+    forwardersdisabled: "Η προώθηση των email δεν είναι ενεργοποιημένη. Επικοινωνήστε με τον διαχειριστή.",
+    changepassword: "Αλλαγή κωδικού",
+    delete: "Διαγραφή",
+    logintext: "Πληκτρολογήστε τα στοιχεία σύνδεσης του email σας",
+    email: "Διεύθυνση Email",
+    password: "Κωδικός",
+    newpass1: "Νέος Κωδικός",
+    newpass2: "Επανάληψη Νέου Κωδικού",
+    save: "Αποθήκευση",
+    passwordsmustmatch: "Οι κωδικοί δεν είναι ίδιοι. Προσπαθήστε ξανά...",
+    passwordischanged: "Ο κωδικός σας έχει τροποποιηθεί.",
+    passwordchangefailed: "Αδυναμία αλλαγής του κωδικού. Θέλετε να δοκιμάστε αργότερα;",
+    emailnotvalid: "Δεν είναι σωστός ο κωδικός που πληκτρολογήσατε!",
+    logout: "Αποσύνδεση",
+    headline:"Διαχείριση Email για την διεύθυνση "
+}
+
 var app = new App();
 app._init();
 app.lang(german);
