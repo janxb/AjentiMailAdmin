@@ -6,18 +6,15 @@ Request::need_parameters('email', 'password');
 
 $existing = false;
 
-foreach (Config::$mailconfig->mailboxes as $mailbox) {
-    $mailbox_email = $mailbox->local . '@' . $mailbox->domain;
-    if ($mailbox_email == Request::$email) {
-        $existing = true;
-        $mailbox->password = Request::$data['password'];
-    }
-}
+MailboxIterator::forMatchingMailbox(Request::$email, function ($mailbox) {
+	global $existing;
+	$existing = true;
+	$mailbox->password = Request::$data['password'];
+	Config::save();
+});
 
-if ($existing){
-    Config::save();
-} else {
-    Response::$error = 'address_not_found';
+if (!$existing) {
+	Response::$error = 'address_not_found';
 }
 
 Response::send();

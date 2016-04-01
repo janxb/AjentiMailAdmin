@@ -9,21 +9,18 @@ $target->email = Request::$data['forward'];
 
 $existing = false;
 
-foreach (Config::$mailconfig->forwarding_mailboxes as $mailbox) {
-    $mailbox_email = $mailbox->local . '@' . $mailbox->domain;
-    if ($mailbox_email == Request::$email) {
-        $existing = true;
-        if (!in_array($target, $mailbox->targets)) {
-            array_push($mailbox->targets, $target);
-        } else {
-            Response::$error = 'duplicated_forwarding_address';
-        }
-    }
-}
+MailboxIterator::forMatchingForwarder(Request::$email, function ($mailbox) {
+	global $target, $existing;
+	$existing = true;
+	if (!in_array($target, $mailbox->targets)) {
+		array_push($mailbox->targets, $target);
+	} else {
+		Response::$error = 'duplicated_forwarding_address';
+	}
+	Config::save();
+});
 
-if ($existing) {
-    Config::save();
-} else {
-    Response::$error = 'address_not_found';
+if (!$existing) {
+	Response::$error = 'address_not_found';
 }
 Response::send();
