@@ -6,7 +6,7 @@
 	<body>
 		<div data-bind="visible:!authenticated()" class="loginwindow">
 			<p data-bind="text:lang().logintext"></p>
-			<form data-bind="submit:_checkLogin">
+			<form data-bind="submit:_login">
 				<input data-bind="attr: { placeholder:lang().email }, textInput: email" name="email">
 				<input data-bind="attr: { placeholder:lang().password }, textInput: password" name="password" type="password">
 				<input data-bind="value:lang().login" type="submit">
