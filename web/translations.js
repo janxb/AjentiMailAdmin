@@ -2,6 +2,7 @@ var Languages = {
     english: {
         login: "Login",
         loginfailed: "Can't log in. Maybe you entered the wrong login data?",
+        addnewforwarder: "Add new Forwarding Adress",
         forwarders: "Forwarding adresses",
         forwardersdisabled: "Mail forwarding is not enabled for your account. Please contact your mail administrator.",
         changepassword: "Change mailbox password",
@@ -31,6 +32,7 @@ var Languages = {
     german: {
         login: "Login",
         loginfailed: "Anmeldung fehlgeschlagen. Sind die Anmeldedaten korrekt?",
+        addnewforwarder: "Neue Weiterleitung hinzufügen",
         forwarders: "Email Weiterleitungen",
         forwardersdisabled: "Email Weiterleitungen sind für den Account nicht aktiviert. Bitte an den Email Administrator wenden.",
         changepassword: "Account-Passwort ändern",
@@ -46,7 +48,7 @@ var Languages = {
         passwordchangefailed: "Passwort konnte nicht geändert werden. Bitte später erneut versuchen..",
         emailnotvalid: "Die eingegebene Email-Adresse existiert nicht.",
         logout: "Abmelden",
-        headline: "Email Account-Verwaltung von ",
+        headline: "Email Account-Verwaltung für ",
         emailprotected: "Diese Adresse ist von einem Administrator reserviert und kann nicht verwendet werden.",
         weakpassword: "Das eingegebene Passwort entspricht nicht den Anforderungen.",
         passwordforgotten: "Passwort vergessen? Hier kann es an die hinterlegten Weiterleitungs-Adressen gesendet werden.",
@@ -59,6 +61,7 @@ var Languages = {
     greek: {
         login: "Σύνδεση",
         loginfailed: "Αδυναμία σύνδεσης. Μήπως έχετε δώσει λάθος στοιχεία;",
+        addnewforwarder: "προσθέσετε νέα διεύθυνση προώθησης",
         forwarders: "Διευθύνσεις Προώθησης",
         forwardersdisabled: "Η προώθηση των email δεν είναι ενεργοποιημένη. Επικοινωνήστε με τον διαχειριστή.",
         changepassword: "Αλλαγή κωδικού",
@@ -91,7 +94,7 @@ var Translation = {
     get: function (key) {
         var value = Languages[this.language][key];
         if (value === undefined) {
-            console.error("Undefined Translation for '" + key + "'");
+            console.error("Missing Translation for '" + key + "' at Language '" + this.language + "'");
             value = Languages['english'][key];
         }
         return value;

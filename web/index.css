@@ -1,3 +1,16 @@
+body {
+    padding: 1%;
+}
+
+h2 {
+    margin: 0;
+    padding-bottom: 15px;
+}
+
+.panel h3 {
+    font-weight: bold;
+}
+
 .loadingwindow {
     position: fixed;
     top: 0;
@@ -10,11 +23,11 @@
 .loadingwindow .inner {
     background: #fff;
     position: fixed;
-    top: 30%;
+    top: 5%;
     text-align: center;
     width: 100%;
-    font-size:1.2em;
-    font-family:Verdana;
+    font-size: 1.2em;
+    font-family: Verdana;
 }
 
 .pointer {
@@ -22,13 +35,13 @@
 }
 
 .preloader {
-    width: 23px;
-    height: 23px;
+    width: 40px;
+    height: 40px;
     margin: auto;
     display: block;
     background: none;
     border-radius: 500px;
-    border: 4px dashed black;
+    border: 8px dotted black;
     -moz-border-left-colors: #FFF;
     -moz-border-right-colors: #FFF;
     /*Each rotation takes 3 seconds and our div will rotate infinitely*/
