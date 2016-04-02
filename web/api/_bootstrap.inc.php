@@ -1,6 +1,6 @@
 <?php
 
-ini_set('display_errors', true);
+ini_set('display_errors', false);
 set_include_path(dirname(__FILE__) . '/../classes');
 
 function __autoload($class_name)
