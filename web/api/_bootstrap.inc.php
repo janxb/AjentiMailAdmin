@@ -16,7 +16,7 @@ Config::$basepath = dirname(__FILE__) . '/../../';
 Config::load();
 
 Request::$auth = isset($_REQUEST['auth']) ? $_REQUEST['auth'] : null;
-Request::$email = isset($_REQUEST['email']) ? $_REQUEST['email'] : null;
+Request::$email = isset($_REQUEST['email']) ? strtolower($_REQUEST['email']) : null;
 Request::$data = $_REQUEST;
 
 unset($_REQUEST, $_GET, $_POST);
