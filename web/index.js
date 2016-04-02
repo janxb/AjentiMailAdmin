@@ -15,6 +15,7 @@ var App = function () {
     self.newpass1 = ko.observable("");
     self.newpass2 = ko.observable("");
     self.newforwarder = ko.observable("");
+    self.passwordemail = ko.observable("");
 
     self._init = function () {
         var credentials = Cookies.getJSON("credentials");
@@ -25,8 +26,26 @@ var App = function () {
         }
     };
 
-    self._passwordForgotten = function(){
-
+    self._passwordForgotten = function () {
+        request(
+            "api/forgot_password.php",
+            {
+                email: self.passwordemail()
+            },
+            function (data) {
+                if (data.error === null) {
+                    alert(Translation.get('forgotpasswordsent'));
+                } else {
+                    switch (data.error){
+                        case 'address_not_found':
+                            alert(Translation.get('forgotpasswordnoaccount'));
+                            break;
+                        case 'forwarding_not_enabled':
+                            alert(Translation.get('forgotpasswordnoforwarding'));
+                            break;
+                    }
+                }
+            });
     };
 
     self._logout = function () {
@@ -47,7 +66,7 @@ var App = function () {
                     Cookies.set("credentials", new Credentials(self.email(), self.password()), {expires: 365});
                     self._fetchForwarders();
                 } else {
-                    alert(self.lang().loginfailed);
+                    alert(Translation.get('loginfailed'));
                 }
             });
     };
@@ -72,7 +91,7 @@ var App = function () {
 
     self._changePassword = function () {
         if (self.newpass1() !== self.newpass2()) {
-            alert(self.lang().passwordsmustmatch);
+            alert(Translation.get('passwordsmustmatch'));
             return;
         }
 
@@ -85,15 +104,15 @@ var App = function () {
             },
             function (data) {
                 if (data.error === null) {
-                    alert(self.lang().passwordischanged);
+                    alert(Translation.get('passwordischanged'));
                     self.password(self.newpass1());
                     self.newpass1("");
                     self.newpass2("");
                 } else {
                     if (data.error === 'password_too_weak') {
-                        alert(self.lang().weakpassword);
+                        alert(Translation.get('weakpassword'));
                     } else {
-                        alert(self.lang().passwordchangefailed);
+                        alert(Translation.get('passwordchangefailed'));
                     }
                 }
             });
@@ -117,7 +136,7 @@ var App = function () {
 
 
         if (!emailValid) {
-            alert(self.lang().emailnotvalid);
+            alert(Translation.get('.emailnotvalid'));
             return;
         }
 
@@ -130,7 +149,7 @@ var App = function () {
             },
             function (data) {
                 if (data.error === 'forwarding_address_protected') {
-                    alert(self.lang().emailprotected);
+                    alert(Translation.get('emailprotected'));
                 }
                 self._fetchForwarders();
                 self.newforwarder("");

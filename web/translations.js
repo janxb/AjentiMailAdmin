@@ -21,7 +21,11 @@ var Languages = {
         emailprotected: "This address is protected by an Administrator and can not be used.",
         weakpassword: "The selected password is not strong enough.",
         passwordforgotten: "If you have forgotten your password, we can send it to your forwarding addresses, if enabled.",
-        sendpassword: "Send Password"
+        sendpassword: "Send Password",
+        forgotpasswordsent: "The password has been sent to your forwarding addresses.",
+        forgotpasswordnoaccount: "The email address was not found.",
+        forgotpasswordnoforwarding: "Sorry, but email forwarding is not enabled for your account. Please contact your mail administrator."
+
     },
     german: {
         login: "Login",
@@ -45,7 +49,10 @@ var Languages = {
         emailprotected: "Diese Adresse ist von einem Administrator reserviert und kann nicht verwendet werden.",
         weakpassword: "Das eingegebene Passwort entspricht nicht den Anforderungen.",
         passwordforgotten: "Passwort vergessen? Hier kann es an die hinterlegten Weiterleitungs-Adressen gesendet werden.",
-        sendpassword: "Passwort anfordern"
+        sendpassword: "Passwort anfordern",
+        forgotpasswordsent: "Das Passwort wurde an die Weiterleitungs-Adressen gesendet.",
+        forgotpasswordnoaccount: "Die Email-Adresse wurde nicht gefunden.",
+        forgotpasswordnoforwarding: "Leider sind Weiterleitungen für diesen Account nicht aktiviert. Bitte an den Mail-Administrator wenden."
     },
     greek: {
         login: "Σύνδεση",
@@ -69,7 +76,10 @@ var Languages = {
         emailprotected: "Αυτή η διεύθυνση προστατεύεται από ένα διαχειριστή και δεν μπορούν να χρησιμοποιηθούν.",
         weakpassword: "Το επιλεγμένο κωδικός πρόσβασης δεν είναι αρκετά ισχυρή.",
         passwordforgotten: "Εάν έχετε ξεχάσει τον κωδικό σας, μπορούμε να στείλουμε στις διευθύνσεις προώθησης σας, αν ενεργοποιηθεί.",
-        sendpassword: "στείλουμε τον κωδικό"
+        sendpassword: "στείλουμε τον κωδικό",
+        forgotpasswordsent: "Ο κωδικός πρόσβασης έχει σταλεί στη διεύθυνση αποστολής σας.",
+        forgotpasswordnoaccount: "Η διεύθυνση email δεν βρέθηκε.",
+        forgotpasswordnoforwarding: "Συγγνώμη, αλλά προώθηση email δεν είναι ενεργοποιημένη για το λογαριασμό σας. Επικοινωνήστε με το διαχειριστή Email σας."
     }
 };
 
