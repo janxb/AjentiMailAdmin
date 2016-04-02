@@ -24,7 +24,8 @@ var Languages = {
         sendpassword: "Send Password",
         forgotpasswordsent: "The password has been sent to your forwarding addresses.",
         forgotpasswordnoaccount: "The email address was not found.",
-        forgotpasswordnoforwarding: "Sorry, but email forwarding is not enabled for your account. Please contact your mail administrator."
+        forgotpasswordnoforwarding: "Sorry, but email forwarding is not enabled for your account. Please contact your mail administrator.",
+        apploading: "Loading Data, please wait.."
 
     },
     german: {
@@ -52,7 +53,8 @@ var Languages = {
         sendpassword: "Passwort anfordern",
         forgotpasswordsent: "Das Passwort wurde an die Weiterleitungs-Adressen gesendet.",
         forgotpasswordnoaccount: "Die Email-Adresse wurde nicht gefunden.",
-        forgotpasswordnoforwarding: "Leider sind Weiterleitungen für diesen Account nicht aktiviert. Bitte an den Mail-Administrator wenden."
+        forgotpasswordnoforwarding: "Leider sind Weiterleitungen für diesen Account nicht aktiviert. Bitte an den Mail-Administrator wenden.",
+        apploading: "Daten werden geladen, bitte warten.."
     },
     greek: {
         login: "Σύνδεση",
@@ -79,7 +81,8 @@ var Languages = {
         sendpassword: "στείλουμε τον κωδικό",
         forgotpasswordsent: "Ο κωδικός πρόσβασης έχει σταλεί στη διεύθυνση αποστολής σας.",
         forgotpasswordnoaccount: "Η διεύθυνση email δεν βρέθηκε.",
-        forgotpasswordnoforwarding: "Συγγνώμη, αλλά προώθηση email δεν είναι ενεργοποιημένη για το λογαριασμό σας. Επικοινωνήστε με το διαχειριστή Email σας."
+        forgotpasswordnoforwarding: "Συγγνώμη, αλλά προώθηση email δεν είναι ενεργοποιημένη για το λογαριασμό σας. Επικοινωνήστε με το διαχειριστή Email σας.",
+        apploading: "φόρτωση δεδομένων, παρακαλώ περιμένετε..."
     }
 };
 

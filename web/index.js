@@ -17,6 +17,12 @@ var App = function () {
     self.newforwarder = ko.observable("");
     self.passwordemail = ko.observable("");
 
+    self.ajaxCalls = ko.observable(0);
+    self.loading = ko.computed(function () {
+        return self.ajaxCalls() > 0;
+    }, self);
+
+
     self._init = function () {
         var credentials = Cookies.getJSON("credentials");
         if (credentials !== undefined) {
@@ -24,6 +30,7 @@ var App = function () {
             self.password(credentials.password);
             self._login();
         }
+        return self;
     };
 
     self._passwordForgotten = function () {
@@ -34,14 +41,14 @@ var App = function () {
             },
             function (data) {
                 if (data.error === null) {
-                    alert(Translation.get('forgotpasswordsent'));
+                    showInfo(Translation.get('forgotpasswordsent'));
                 } else {
-                    switch (data.error){
+                    switch (data.error) {
                         case 'address_not_found':
-                            alert(Translation.get('forgotpasswordnoaccount'));
+                            showError(Translation.get('forgotpasswordnoaccount'));
                             break;
                         case 'forwarding_not_enabled':
-                            alert(Translation.get('forgotpasswordnoforwarding'));
+                            showError(Translation.get('forgotpasswordnoforwarding'));
                             break;
                     }
                 }
@@ -51,7 +58,7 @@ var App = function () {
     self._logout = function () {
         Cookies.remove("credentials");
         location.reload();
-    }
+    };
 
     self._login = function () {
         request(
@@ -66,7 +73,7 @@ var App = function () {
                     Cookies.set("credentials", new Credentials(self.email(), self.password()), {expires: 365});
                     self._fetchForwarders();
                 } else {
-                    alert(Translation.get('loginfailed'));
+                    showError(Translation.get('loginfailed'));
                 }
             });
     };
@@ -87,11 +94,11 @@ var App = function () {
                     self.forwardersEnabled(false);
                 }
             });
-    }
+    };
 
     self._changePassword = function () {
         if (self.newpass1() !== self.newpass2()) {
-            alert(Translation.get('passwordsmustmatch'));
+            showError(Translation.get('passwordsmustmatch'));
             return;
         }
 
@@ -104,19 +111,19 @@ var App = function () {
             },
             function (data) {
                 if (data.error === null) {
-                    alert(Translation.get('passwordischanged'));
+                    showInfo(Translation.get('passwordischanged'));
                     self.password(self.newpass1());
                     self.newpass1("");
                     self.newpass2("");
                 } else {
                     if (data.error === 'password_too_weak') {
-                        alert(Translation.get('weakpassword'));
+                        showError(Translation.get('weakpassword'));
                     } else {
-                        alert(Translation.get('passwordchangefailed'));
+                        showError(Translation.get('passwordchangefailed'));
                     }
                 }
             });
-    }
+    };
 
     self._deleteForwarder = function (forwarder) {
         request(
@@ -129,14 +136,13 @@ var App = function () {
             function (data) {
                 self._fetchForwarders();
             });
-    }
+    };
 
     self._addForwarder = function () {
         var emailValid = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(self.newforwarder());
 
-
         if (!emailValid) {
-            alert(Translation.get('.emailnotvalid'));
+            showError(Translation.get('emailnotvalid'));
             return;
         }
 
@@ -149,21 +155,33 @@ var App = function () {
             },
             function (data) {
                 if (data.error === 'forwarding_address_protected') {
-                    alert(Translation.get('emailprotected'));
+                    showError(Translation.get('emailprotected'));
                 }
                 self._fetchForwarders();
                 self.newforwarder("");
             });
-    }
+    };
+
+    var showInfo = function (text) {
+        showPopup(text, 'success');
+    };
+
+    var showError = function (text) {
+        showPopup(text, 'error');
+    };
+
+    var showPopup = function (text, type) {
+        sweetAlert("", text, type);
+    };
 
     var request = function (url, data, responseMethod) {
+        self.ajaxCalls(self.ajaxCalls() + 1);
         $.post(url, data, function (data) {
             data = $.parseJSON(data);
             responseMethod(data);
+            self.ajaxCalls(self.ajaxCalls() - 1);
         });
-    }
+    };
 };
 
-var app = new App();
-app._init();
-ko.applyBindings(app);
+ko.applyBindings(new App()._init());
