@@ -1,4 +1,4 @@
-var Translations = {
+var Languages = {
     english: {
         login: "Login",
         loginfailed: "Can't log in. Maybe you entered the wrong login data?",
@@ -19,7 +19,9 @@ var Translations = {
         logout: "Logout",
         headline: "Email Account Management for adress ",
         emailprotected: "This address is protected by an Administrator and can not be used.",
-        weakpassword: "The selected password is not strong enough."
+        weakpassword: "The selected password is not strong enough.",
+        passwordforgotten: "If you have forgotten your password, we can send it to your forwarding addresses, if enabled.",
+        sendpassword: "Send Password"
     },
     german: {
         login: "Login",
@@ -41,7 +43,9 @@ var Translations = {
         logout: "Abmelden",
         headline: "Email Account-Verwaltung von ",
         emailprotected: "Diese Adresse ist von einem Administrator reserviert und kann nicht verwendet werden.",
-        weakpassword: "Das eingegebene Passwort entspricht nicht den Anforderungen."
+        weakpassword: "Das eingegebene Passwort entspricht nicht den Anforderungen.",
+        passwordforgotten: "Passwort vergessen? Hier kann es an die hinterlegten Weiterleitungs-Adressen gesendet werden.",
+        sendpassword: "Passwort anfordern"
     },
     greek: {
         login: "Σύνδεση",
@@ -63,6 +67,20 @@ var Translations = {
         logout: "Αποσύνδεση",
         headline: "Διαχείριση Email για την διεύθυνση ",
         emailprotected: "Αυτή η διεύθυνση προστατεύεται από ένα διαχειριστή και δεν μπορούν να χρησιμοποιηθούν.",
-        weakpassword: "Το επιλεγμένο κωδικός πρόσβασης δεν είναι αρκετά ισχυρή."
+        weakpassword: "Το επιλεγμένο κωδικός πρόσβασης δεν είναι αρκετά ισχυρή.",
+        passwordforgotten: "Εάν έχετε ξεχάσει τον κωδικό σας, μπορούμε να στείλουμε στις διευθύνσεις προώθησης σας, αν ενεργοποιηθεί.",
+        sendpassword: "στείλουμε τον κωδικό"
+    }
+};
+
+var Translation = {
+    language: null,
+    get: function (key) {
+        var value = Languages[this.language][key];
+        if (value === undefined) {
+            console.error("Undefined Translation for '" + key + "'");
+            value = Languages['english'][key];
+        }
+        return value;
     }
 };

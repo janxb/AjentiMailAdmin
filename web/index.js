@@ -1,7 +1,7 @@
 var Credentials = function (email, password) {
     this.email = email;
     this.password = password;
-}
+};
 
 var App = function () {
     var self = this;
@@ -11,7 +11,6 @@ var App = function () {
     self.loading = ko.observable(false);
     self.forwardersEnabled = ko.observable(false);
     self.forwarders = ko.observableArray([]);
-    self.lang = ko.observable();
 
     self.newpass1 = ko.observable("");
     self.newpass2 = ko.observable("");
@@ -24,7 +23,11 @@ var App = function () {
             self.password(credentials.password);
             self._login();
         }
-    }
+    };
+
+    self._passwordForgotten = function(){
+
+    };
 
     self._logout = function () {
         Cookies.remove("credentials");
@@ -144,5 +147,4 @@ var App = function () {
 
 var app = new App();
 app._init();
-app.lang(Translations.german);
 ko.applyBindings(app);

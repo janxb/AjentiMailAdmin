@@ -5,25 +5,31 @@
 	</head>
 	<body>
 		<div data-bind="visible:!authenticated()" class="loginwindow">
-			<p data-bind="text:lang().logintext"></p>
+			<p data-bind="text:Translation.get('logintext')"></p>
 			<form data-bind="submit:_login">
-				<input data-bind="attr: { placeholder:lang().email }, textInput: email" name="email">
-				<input data-bind="attr: { placeholder:lang().password }, textInput: password" name="password" type="password">
-				<input data-bind="value:lang().login" type="submit">
+				<input data-bind="attr: { placeholder:Translation.get('email') }, textInput: email" name="email">
+				<input data-bind="attr: { placeholder:Translation.get('password') }, textInput: password" name="password" type="password">
+				<input data-bind="value:Translation.get('login')" type="submit">
+			</form>
+			<br><br>
+			<p data-bind="text:Translation.get('passwordforgotten')"></p>
+			<form data-bind="submit:_passwordForgotten">
+				<input data-bind="attr: { placeholder:Translation.get('email') }, textInput: email" name="email">
+				<input data-bind="value:Translation.get('sendpassword')" type="submit">
 			</form>
 
 		</div>
 
 		<div data-bind="visible:authenticated()" class="appwindow">
-			<b><span data-bind="text:lang().headline"></span><span data-bind="text:email()"></span></b><br><br>
-			<b data-bind="text:lang().forwarders"></b><br>
+			<b><span data-bind="text:Translation.get('headline')"></span><span data-bind="text:email()"></span></b><br><br>
+			<b data-bind="text:Translation.get('forwarders')"></b><br>
 			<div data-bind="visible:forwardersEnabled()">
 				<table>
 					<tbody data-bind="foreach:forwarders()">
 						<tr>
 							<td data-bind="text:$data"></td>
 							<td>
-								<button data-bind="click:$parent._deleteForwarder, text:$parent.lang().delete"></button>
+								<button data-bind="click:$parent._deleteForwarder, text:Translation.get('delete')"></button>
 							</td>
 						</tr>
 					</tbody>
@@ -31,20 +37,20 @@
 				&mdash;&mdash;<br>
 				<form data-bind="submit:_addForwarder">
 					<input data-bind="value:newforwarder">
-					<input data-bind="value:lang().save" type="submit">
+					<input data-bind="value:Translation.get('save')" type="submit">
 				</form>
 			</div>
-			<p data-bind="visible:!forwardersEnabled(), text:lang().forwardersdisabled"></p>
+			<p data-bind="visible:!forwardersEnabled(), text:Translation.get('forwardersdisabled')"></p>
 
 			<br><br>
-			<b data-bind="text:lang().changepassword"></b>
+			<b data-bind="text:Translation.get('changepassword')"></b>
 			<form data-bind="submit:_changePassword">
-				<input name="newpass1" type="password" data-bind="attr: { placeholder:lang().newpass1 }, value:newpass1">
-				<input name="newpass2" type="password" data-bind="attr: { placeholder:lang().newpass2 }, value:newpass2">
-				<input data-bind="value:lang().save" type="submit">
+				<input name="newpass1" type="password" data-bind="attr: { placeholder:Translation.get('newpass1') }, value:newpass1">
+				<input name="newpass2" type="password" data-bind="attr: { placeholder:Translation.get('newpass2') }, value:newpass2">
+				<input data-bind="value:Translation.get('save')" type="submit">
 			</form>
 			<br><br>
-			<button data-bind="click:_logout, text:lang().logout"></button>
+			<button data-bind="click:_logout, text:Translation.get('logout')"></button>
 		</div>
 
 		<div data-bind="visible:loading()" class="loadingwindow">
@@ -53,6 +59,7 @@
 
 		<script src="//cdn.jsdelivr.net/g/jquery@2.2.2,knockout@3.4.0,js-cookie@2.2.0"></script>
 		<script src="translations.js"></script>
+		<script src="config.js"></script>
 		<script src="index.js"></script>
 	</body>
 </html>
