@@ -11,9 +11,14 @@ $existing = false;
 
 MailboxIterator::forMatchingForwarder(Request::$email, function ($mailbox) {
 	global $target, $existing;
+	if (in_array($target->email, Config::$config->protected_forwarders)) {
+		Response::$error = 'forwarding_address_protected';
+		Response::send();
+	}
+
 	$existing = true;
 	if (!in_array($target, $mailbox->targets)) {
-		array_push($mailbox->targets, $target);
+			array_push($mailbox->targets, $target);
 	} else {
 		Response::$error = 'duplicated_forwarding_address';
 	}

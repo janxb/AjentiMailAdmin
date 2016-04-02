@@ -87,7 +87,11 @@ var App = function () {
                     self.newpass1("");
                     self.newpass2("");
                 } else {
-                    alert(self.lang().passwordchangefailed);
+                    if (data.error === 'password_too_weak') {
+                        alert(self.lang().weakpassword);
+                    } else {
+                        alert(self.lang().passwordchangefailed);
+                    }
                 }
             });
     }
@@ -122,6 +126,9 @@ var App = function () {
                 forward: self.newforwarder()
             },
             function (data) {
+                if (data.error === 'forwarding_address_protected') {
+                    alert(self.lang().emailprotected);
+                }
                 self._fetchForwarders();
                 self.newforwarder("");
             });

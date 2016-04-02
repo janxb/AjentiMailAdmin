@@ -11,6 +11,11 @@ $existing = false;
 
 MailboxIterator::forMatchingForwarder(Request::$email, function ($mailbox) {
 	global $target, $existing;
+	if (in_array($target->email, Config::$config->protected_forwarders)) {
+		Response::$error = 'forwarding_address_protected';
+		Response::send();
+	}
+
 	$target_key = array_search($target, $mailbox->targets);
 	if ($target_key !== false) {
 		Response::$data = $mailbox->targets[$target_key];

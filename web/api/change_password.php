@@ -9,7 +9,13 @@ $existing = false;
 MailboxIterator::forMatchingMailbox(Request::$email, function ($mailbox) {
 	global $existing;
 	$existing = true;
-	$mailbox->password = Request::$data['password'];
+
+	$password = Request::$data['password'];
+	if (strlen($password) < Config::$config->password_minlength) {
+		Response::$error = 'password_too_weak';
+		Response::send();
+	}
+	$mailbox->password = $password;
 	Config::save();
 });
 

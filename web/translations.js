@@ -17,7 +17,9 @@ var Translations = {
         passwordchangefailed: "Can't change your password. Maybe try again later?",
         emailnotvalid: "The entered email address is not valid!",
         logout: "Logout",
-        headline: "Email Account Management for adress "
+        headline: "Email Account Management for adress ",
+        emailprotected: "This address is protected by an Administrator and can not be used.",
+        weakpassword: "The selected password is not strong enough."
     },
     german: {
         login: "Login",
@@ -37,7 +39,9 @@ var Translations = {
         passwordchangefailed: "Passwort konnte nicht geändert werden. Bitte später erneut versuchen..",
         emailnotvalid: "Die eingegebene Email-Adresse existiert nicht.",
         logout: "Abmelden",
-        headline: "Email Account-Verwaltung von "
+        headline: "Email Account-Verwaltung von ",
+        emailprotected: "Diese Adresse ist von einem Administrator reserviert und kann nicht verwendet werden.",
+        weakpassword: "Das eingegebene Passwort entspricht nicht den Anforderungen."
     },
     greek: {
         login: "Σύνδεση",
@@ -57,6 +61,8 @@ var Translations = {
         passwordchangefailed: "Αδυναμία αλλαγής του κωδικού. Θέλετε να δοκιμάστε αργότερα;",
         emailnotvalid: "Δεν είναι σωστός ο κωδικός που πληκτρολογήσατε!",
         logout: "Αποσύνδεση",
-        headline: "Διαχείριση Email για την διεύθυνση "
+        headline: "Διαχείριση Email για την διεύθυνση ",
+        emailprotected: "Αυτή η διεύθυνση προστατεύεται από ένα διαχειριστή και δεν μπορούν να χρησιμοποιηθούν.",
+        weakpassword: "Το επιλεγμένο κωδικός πρόσβασης δεν είναι αρκετά ισχυρή."
     }
 };

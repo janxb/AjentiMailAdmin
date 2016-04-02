@@ -1,6 +1,12 @@
 {
-  "mailconfig": "/etc/ajenti/mail.json",
-  "ssh_host": "localhost:22",
-  "ssh_user": "root",
-  "ssh_pass": "YOURSSHPASSWORD"
+    "mailconfig": "/etc/ajenti/mail.json",
+    "ssh_host": "localhost:22",
+    "ssh_user": "root",
+    "ssh_pass": "YOURSSHPASSWORD",
+    "password_minlength": 5,
+    "passwordmail_from": "postmaster@example.org",
+    "passwordmail_bcc": null,
+    "passwordmail_subject": "Your Mail Password",
+    "passwordmail_content": "You have requested your Mail Account Password. This is your Password: {{password}}",
+    "protected_forwarders": []
 }
