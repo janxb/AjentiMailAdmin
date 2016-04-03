@@ -1,12 +1,15 @@
 {
-    "mailconfig": "/etc/ajenti/mail.json",
-    "ssh_host": "localhost:22",
-    "ssh_user": "root",
-    "ssh_pass": "YOURSSHPASSWORD",
-    "password_minlength": 5,
-    "passwordmail_from": "postmaster@example.org",
-    "passwordmail_bcc": null,
-    "passwordmail_subject": "Your Mail Password",
-    "passwordmail_content": "You have requested your Mail Account Password. This is your Password: {{password}}",
-    "protected_forwarders": []
+  "mailconfig": "/etc/ajenti/mail.json",
+  "ssh_host": "localhost:22",
+  "ssh_user": "root",
+  "ssh_pass": "YOURSSHPASSWORD",
+  "password_minlength": 5,
+  "protected_forwarders": [],
+  "accountmails_from": "postmaster@example.org",
+  "accountmails_bcc": null,
+  "forwardingmail_feature_enabled": true,
+  "forwardingmail_subject": "{{source}} is forwarding emails to your account",
+  "forwardingmail_content": "Hi {{target}},\n{{source}} has included you in his email account config.\nIf this is not correct, just answer this email.",
+  "passwordmail_subject": "Your Mail Password",
+  "passwordmail_content": "You have requested your Mail Account Password.\nThis is your Password: {{password}}"
 }

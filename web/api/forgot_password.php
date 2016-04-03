@@ -28,11 +28,11 @@ if (!$mailboxExisting) {
 
 $mail = new PasswordMail();
 $mail->to = Request::$email;
-$mail->from = Config::$config->passwordmail_from;
+$mail->from = Config::$config->accountmails_from;
 $mail->subject = Config::$config->passwordmail_subject;
 $mail->content = Config::$config->passwordmail_content;
-if (Config::$config->passwordmail_bcc !== null) {
-	$mail->bcc = Config::$config->passwordmail_bcc;
+if (Config::$config->accountmails_bcc !== null) {
+	$mail->bcc = Config::$config->accountmails_bcc;
 }
 
 $success = $mail->send();

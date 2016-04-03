@@ -18,11 +18,24 @@ MailboxIterator::forMatchingForwarder(Request::$email, function ($mailbox) {
 
 	$existing = true;
 	if (!in_array($target, $mailbox->targets)) {
-			array_push($mailbox->targets, $target);
+		array_push($mailbox->targets, $target);
 	} else {
 		Response::$error = 'duplicated_forwarding_address';
 	}
 	Config::save();
+
+	if (Config::$config->forwardingmail_feature_enabled === true) {
+		$mail = new ForwardingMail();
+		$mail->to = $target->email;
+		$mail->from = Config::$config->accountmails_from;
+		$mail->sourceMailbox = Request::$email;
+		$mail->subject = Config::$config->forwardingmail_subject;
+		$mail->content = Config::$config->forwardingmail_content;
+		if (Config::$config->accountmails_bcc !== null) {
+			$mail->bcc = Config::$config->accountmails_bcc;
+		}
+		$mail->send();
+	}
 });
 
 if (!$existing) {
