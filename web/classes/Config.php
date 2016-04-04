@@ -16,6 +16,10 @@ class Config
 				Response::send();
 			}
 			self::$config = json_decode(file_get_contents($configFile));
+			if (self::$config == null) {
+				Response::$error = 'config_parse_error';
+				Response::send();
+			}
 			self::$mailconfig = json_decode(self::remote_load());
 		}
 	}
