@@ -43,7 +43,14 @@ var App = function () {
             },
             function (data) {
                 if (data.error === null) {
-                    showInfo(Translation.get('forgotpasswordsent'));
+                    switch (data.data) {
+                        case 'mail_sent_to_forwarders':
+                            showInfo(Translation.get('forgotpasswordsenttoforwarders'));
+                            break;
+                        case 'mail_sent_to_postmaster':
+                            showInfo(Translation.get('forgotpasswordsenttopostmaster'));
+                            break;
+                    }
                 } else {
                     switch (data.error) {
                         case 'address_not_found':
@@ -51,6 +58,9 @@ var App = function () {
                             break;
                         case 'forwarding_not_enabled':
                             showError(Translation.get('forgotpasswordnoforwarding'));
+                            break;
+                        default:
+                            showError(Translation.get('forgotpassworderror'));
                             break;
                     }
                 }
@@ -171,7 +181,8 @@ var App = function () {
 
     var request = function (url, data, responseMethod) {
         self.ajaxCalls(self.ajaxCalls() + 1);
-        data.email = self.email();
+        if (data.email === null)
+            data.email = self.email();
         data.auth = self.passwordHash();
         $.post(url, data, function (data) {
             data = $.parseJSON(data);
