@@ -12,6 +12,10 @@ var App = function () {
     self.forwardersEnabled = ko.observable(false);
     self.forwarders = ko.observableArray([]);
 
+    self.passwordHash = ko.computed(function () {
+        return md5(self.password());
+    }, self);
+
     self.newpass1 = ko.observable("");
     self.newpass2 = ko.observable("");
     self.newforwarder = ko.observable("");
@@ -63,10 +67,7 @@ var App = function () {
     self._login = function () {
         request(
             "api/authenticate.php",
-            {
-                email: self.email(),
-                auth: self.password()
-            },
+            {},
             function (data) {
                 if (data.error === null) {
                     self.authenticated(true);
@@ -74,6 +75,7 @@ var App = function () {
                     self._fetchForwarders();
                 } else {
                     showError(Translation.get('loginfailed'));
+                    Cookies.remove("credentials");
                 }
             });
     };
@@ -81,10 +83,7 @@ var App = function () {
     self._fetchForwarders = function () {
         request(
             "api/get_forwarders.php",
-            {
-                email: self.email(),
-                auth: self.password()
-            },
+            {},
             function (data) {
                 if (data.error === null) {
                     self.forwardersEnabled(true);
@@ -105,8 +104,6 @@ var App = function () {
         request(
             "api/change_password.php",
             {
-                email: self.email(),
-                auth: self.password(),
                 password: self.newpass1()
             },
             function (data) {
@@ -129,8 +126,6 @@ var App = function () {
         request(
             "api/remove_forwarder.php",
             {
-                email: self.email(),
-                auth: self.password(),
                 forward: forwarder
             },
             function (data) {
@@ -149,8 +144,6 @@ var App = function () {
         request(
             "api/add_forwarder.php",
             {
-                email: self.email(),
-                auth: self.password(),
                 forward: self.newforwarder()
             },
             function (data) {
@@ -176,6 +169,8 @@ var App = function () {
 
     var request = function (url, data, responseMethod) {
         self.ajaxCalls(self.ajaxCalls() + 1);
+        data.email = self.email();
+        data.auth = self.passwordHash();
         $.post(url, data, function (data) {
             data = $.parseJSON(data);
             responseMethod(data);
