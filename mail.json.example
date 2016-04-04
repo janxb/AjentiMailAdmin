@@ -1,1 +1,42 @@
-{ "custom_mta_config":"keep_environment = PWD\nadd_environment = PATH=/usr/local/sbin::/usr/local/bin::/sbin::/bin::/usr/sbin::/usr/bin::/sbin::/bin", "mailboxes":[ { "owner":"root", "domain":"example.org", "password":"anotherpassword", "local":"bar" }, { "owner":"root", "domain":"example.org", "password":"myexamplepassword", "local":"foo" } ], "custom_mta_routers":"ncatchall:\n local_parts = !/etc/exim.domains/$domain\n require_files = !/etc/exim.forward/$local_part@$domain\n driver = redirect\n domains = +catchall_domains\n data = catchall@$domain\n \nspam:\n driver = accept\n local_parts = !www:!root:!nobody:!postmaster:!abuse:!admin\n transport = vmail_spam\n condition = ${if def:h_X-Spam-Flag: {true}}", "forwarding_mailboxes":[ { "owner":"root", "domain":"example.org", "local":"foo", "targets":[ { "email":"foo@example.com" }, { "email":"bar@example.com" } ] } ], "custom_mta_local_router":"", "tls_enable":true, "custom_mta_acl":"acl_accept_all:\naccept\n\n\nacl_custom_data:\nwarn\tspam\t\t= debian-spamd:true\n\t\tadd_header\t= X-Spam-Score: $spam_score\n add_header\t= X-Spam-Report: $spam_report\ndeny\tspam\t\t= debian-spamd\n\t\tmessage\t\t= Spam detected!\n\t\tadd_header\t= X-Spam-Flag: YES\naccept\n\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\nacl_custom_rcpt:\ndrop \tmessage\t\t= Client Policy Restriction: No (consistent) reverse DNS set.\n\t\tcondition\t= ${if !def:sender_host_name}\ndrop\tmessage\t\t= Client Policy Restriction: No (consistent) reverse DNS set.\n\t\tcondition\t= ${if isip{$sender_host_name} {yes}{no}}\ndrop\tmessage\t\t= Client Policy Restriction: No (consistent) reverse DNS set.\n\t\tcondition\t= ${if eq{$sender_host_name}{} {yes}{no}}\ndrop\tmessage\t\t= Client Policy Restriction: No (consistent) reverse DNS set.\n\t\t!verify\t\t= reverse_host_lookup\ndeny \tmessage\t\t= HELO Policy Restriction: HELO is not an FQDN.\n\t\tcondition\t= ${if match{$sender_helo_name}{\\N^\\[\\N}{no}{yes}}\n\t\tcondition\t= ${if match{$sender_helo_name}{\\N[^.]\\N}{no}{yes}}\ndeny \tmessage\t\t= HELO Policy Restriction: HELO is not an FQDN.\n\t\tcondition\t= ${if match{$sender_helo_name}{\\N^\\[\\N}{no}{yes}}\n\t\tcondition\t= ${if match{$sender_helo_name}{\\N\\.\\N}{no}{yes}}\ndeny \tmessage\t\t= Content Policy Restriction: Base64 encoded text messages are not permitted.\n\t\tcondition\t= ${if and{{eq{$h_Content-Transfer-Encoding:}{base64}}{match{$h_Content-Type:}{^text/(html|plain)}}} {true}{false}}\ndeny \tmessage\t\t= Content Policy Restriction: Mails to undisclosed recipients are not permitted.\n\t\tcondition\t= ${if eq{$h_To:}{undisclosed-recipients: ;} {true}{false}}\ndeny \tmessage\t\t= Content Policy Restriction: Mails to undisclosed recipients are not permitted.\n\t\tcondition\t= ${if eq{$h_To:}{undisclosed-recipients:;} {true}{false}}\ndeny\tmessage \t= Client Policy Restriction - $sender_host_address listed by $dnslist_domain\n\t\tdnslists \t= zen.spamhaus.org : bl.spamcop.net\t\t\t\t\ndeny \tmessage \t= Content Policy Restriction: Recipient Address has stupid parts\n\t\tlocal_parts\t= ^.*[@%!/|] : ^\\\\.\ndeny \tmessage \t= Client Policy Restriction: Spoofed HELO found.\n\t\tcondition\t= ${if eq{$sender_helo_name}{$interface_address}{yes}{no}}\ndeny\tmessage \t= Relay not permitted\n \t!domains \t= +local_domains\naccept", "custom_mta_transports":"vmail_spam:\n debug_print = \"T: vmail spam for $local_part@$domain\"\n driver = appendfile\n user = mail\n maildir_format = true\n directory = /var/vmail/$domain/$local_part/.Spam\n create_directory\n delivery_date_add\n envelope_to_add\n return_path_add\n group = mail\n mode = 0600", "dkim_private_key":"/etc/exim4/dkim/private.key", "tls_certificate":"/var/ssl/certs/example.org/fullchain.pem", "dkim_enable":true, "tls_privatekey":"/var/ssl/certs/example.org/privkey.pem", "dkim_selector":"dkim" }
+{
+    "custom_mta_config": "keep_environment = PWD\nadd_environment = PATH=/usr/local/sbin::/usr/local/bin::/sbin::/bin::/usr/sbin::/usr/bin::/sbin::/bin", 
+    "mailboxes": [
+        {
+            "owner": "root", 
+            "domain": "example.org", 
+            "password": "anotherpassword", 
+            "local": "bar"
+        }, 
+        {
+            "owner": "root", 
+            "domain": "example.org", 
+            "password": "myexamplepassword", 
+            "local": "foo"
+        }
+    ], 
+    "custom_mta_routers": "ncatchall:\n  local_parts = !/etc/exim.domains/$domain\n  require_files = !/etc/exim.forward/$local_part@$domain\n  driver = redirect\n  domains = +catchall_domains\n  data = catchall@$domain\n  \nspam:\n driver = accept\n local_parts = !www:!root:!nobody:!postmaster:!abuse:!admin\n transport = vmail_spam\n condition = ${if def:h_X-Spam-Flag: {true}}", 
+    "forwarding_mailboxes": [
+        {
+            "owner": "root", 
+            "domain": "example.org", 
+            "local": "foo",
+            "targets": [
+                {
+                    "email": "foo@example.com"
+                }, 
+                {
+                    "email": "bar@example.com"
+                }
+            ]
+        }
+    ], 
+    "custom_mta_local_router": "", 
+    "tls_enable": true, 
+    "custom_mta_acl": "acl_accept_all:\naccept\n\n\nacl_custom_data:\nwarn\tspam\t\t= debian-spamd:true\n\t\tadd_header\t= X-Spam-Score: $spam_score\n        add_header\t= X-Spam-Report: $spam_report\ndeny\tspam\t\t= debian-spamd\n\t\tmessage\t\t= Spam detected!\n\t\tadd_header\t= X-Spam-Flag: YES\naccept\n\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\nacl_custom_rcpt:\ndrop \tmessage\t\t= Client Policy Restriction: No (consistent) reverse DNS set.\n\t\tcondition\t= ${if !def:sender_host_name}\ndrop\tmessage\t\t= Client Policy Restriction: No (consistent) reverse DNS set.\n\t\tcondition\t= ${if isip{$sender_host_name} {yes}{no}}\ndrop\tmessage\t\t= Client Policy Restriction: No (consistent) reverse DNS set.\n\t\tcondition\t= ${if eq{$sender_host_name}{} {yes}{no}}\ndrop\tmessage\t\t= Client Policy Restriction: No (consistent) reverse DNS set.\n\t\t!verify\t\t= reverse_host_lookup\ndeny \tmessage\t\t= HELO Policy Restriction: HELO is not an FQDN.\n\t\tcondition\t= ${if match{$sender_helo_name}{\\N^\\[\\N}{no}{yes}}\n\t\tcondition\t= ${if match{$sender_helo_name}{\\N[^.]\\N}{no}{yes}}\ndeny \tmessage\t\t= HELO Policy Restriction: HELO is not an FQDN.\n\t\tcondition\t= ${if match{$sender_helo_name}{\\N^\\[\\N}{no}{yes}}\n\t\tcondition\t= ${if match{$sender_helo_name}{\\N\\.\\N}{no}{yes}}\ndeny \tmessage\t\t= Content Policy Restriction: Base64 encoded text messages are not permitted.\n\t\tcondition\t= ${if and{{eq{$h_Content-Transfer-Encoding:}{base64}}{match{$h_Content-Type:}{^text/(html|plain)}}} {true}{false}}\ndeny \tmessage\t\t= Content Policy Restriction: Mails to undisclosed recipients are not permitted.\n\t\tcondition\t= ${if eq{$h_To:}{undisclosed-recipients: ;} {true}{false}}\ndeny \tmessage\t\t= Content Policy Restriction: Mails to undisclosed recipients are not permitted.\n\t\tcondition\t= ${if eq{$h_To:}{undisclosed-recipients:;} {true}{false}}\ndeny\tmessage \t= Client Policy Restriction - $sender_host_address listed by $dnslist_domain\n\t\tdnslists \t= zen.spamhaus.org : bl.spamcop.net\t\t\t\t\ndeny \tmessage \t= Content Policy Restriction: Recipient Address has stupid parts\n\t\tlocal_parts\t= ^.*[@%!/|] : ^\\\\.\ndeny \tmessage \t= Client Policy Restriction: Spoofed HELO found.\n\t\tcondition\t= ${if eq{$sender_helo_name}{$interface_address}{yes}{no}}\ndeny\tmessage  \t= Relay not permitted\n    \t!domains \t= +local_domains\naccept", 
+    "custom_mta_transports": "vmail_spam:\n  debug_print = \"T: vmail spam for $local_part@$domain\"\n  driver = appendfile\n  user = mail\n  maildir_format = true\n  directory = /var/vmail/$domain/$local_part/.Spam\n  create_directory\n  delivery_date_add\n  envelope_to_add\n  return_path_add\n  group = mail\n  mode = 0600", 
+    "dkim_private_key": "/etc/exim4/dkim/private.key", 
+    "tls_certificate": "/var/ssl/certs/example.org/fullchain.pem", 
+    "dkim_enable": true, 
+    "tls_privatekey": "/var/ssl/certs/example.org/privkey.pem", 
+    "dkim_selector": "dkim"
+}
