@@ -1,6 +1,6 @@
 var Credentials = function (email, password) {
     this.email = email;
-    this.password = password;
+    this.passwordHash = password;
 };
 
 var App = function () {
@@ -12,9 +12,7 @@ var App = function () {
     self.forwardersEnabled = ko.observable(false);
     self.forwarders = ko.observableArray([]);
 
-    self.passwordHash = ko.computed(function () {
-        return md5(self.password());
-    }, self);
+    self.passwordHash = ko.observable("");
 
     self.newpass1 = ko.observable("");
     self.newpass2 = ko.observable("");
@@ -31,7 +29,7 @@ var App = function () {
         var credentials = Cookies.getJSON("credentials");
         if (credentials !== undefined) {
             self.email(credentials.email);
-            self.password(credentials.password);
+            self.passwordHash(credentials.passwordHash);
             self._login();
         }
         return self;
@@ -65,17 +63,21 @@ var App = function () {
     };
 
     self._login = function () {
+        if (self.password().length > 0) {
+            self.passwordHash(md5(self.password()));
+        }
+
         request(
             "api/authenticate.php",
             {},
             function (data) {
                 if (data.error === null) {
                     self.authenticated(true);
-                    Cookies.set("credentials", new Credentials(self.email(), self.password()), {expires: 365});
+                    Cookies.set("credentials", new Credentials(self.email(), self.passwordHash()), {expires: 365});
                     self._fetchForwarders();
                 } else {
-                    showError(Translation.get('loginfailed'));
                     Cookies.remove("credentials");
+                    showError(Translation.get('loginfailed'));
                 }
             });
     };
