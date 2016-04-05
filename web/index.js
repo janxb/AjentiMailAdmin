@@ -181,7 +181,7 @@ var App = function () {
 
     var request = function (url, data, responseMethod) {
         self.ajaxCalls(self.ajaxCalls() + 1);
-        if (data.email === null)
+        if (data.email === undefined)
             data.email = self.email();
         data.auth = self.passwordHash();
         $.post(url, data, function (data) {
