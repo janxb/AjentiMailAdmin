@@ -1,9 +1,10 @@
+<?php define('APP_VERSION', '?_v=' . str_replace("\n", '', `svn info 2>/dev/null . | grep "Revision" | awk '{print $2}'`)); ?>
 <html>
 	<head>
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 		<title>AjentiMailAdmin</title>
 		<link rel="stylesheet" href="//cdn.jsdelivr.net/g/bootstrap@3.3.6(css/bootstrap.min.css),sweetalert@1.1.3(sweetalert.css)"/>
-		<link rel="stylesheet" href="index.css"/>
+		<link rel="stylesheet" href="index.css<?= APP_VERSION ?>"/>
 	</head>
 	<body>
 		<div data-bind="visible:!authenticated()" class="loginwindow">
@@ -96,8 +97,8 @@
 		</div>
 
 		<script src="//cdn.jsdelivr.net/g/jquery@2.2.2,knockout@3.4.0,js-cookie@2.2.0,spinjs@2.3.2,sweetalert@1.1.3,js-md5@0.4.1"></script>
-		<script src="translations.js"></script>
-		<script src="config.js"></script>
-		<script src="index.js"></script>
+		<script src="translations.js<?= APP_VERSION ?>"></script>
+		<script src="config.js<?= APP_VERSION ?>"></script>
+		<script src="index.js<?= APP_VERSION ?>"></script>
 	</body>
 </html>
