@@ -14,10 +14,8 @@ MailboxIterator::forMatchingForwarder(Request::$email, function ($mailbox) {
 		}
 	}
 	Response::$data = $targets;
+	Response::send();
 });
 
-if (Response::$data == null) {
-	Response::$error = "address_not_found";
-}
-
+Response::$error = "address_not_found";
 Response::send();
