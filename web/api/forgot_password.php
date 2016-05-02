@@ -15,7 +15,7 @@ MailboxIterator::forMatchingMailbox(Request::$email, function ($mailbox) {
 	$mailDomain = $mailbox->domain;
 	MailboxIterator::forMatchingForwarder(Request::$email, function ($forwarder) {
 		global $forwarderExisting;
-		if (!empty($forwarder->$targets)) {
+		if (!empty($forwarder->targets)) {
 			$forwarderExisting = true;
 		}
 	});
