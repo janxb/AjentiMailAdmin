@@ -1,12 +1,78 @@
+body {
+    padding: 1%;
+}
+
+h2 {
+    margin: 0;
+    padding-bottom: 15px;
+}
+
+.panel h3 {
+    font-weight: bold;
+}
+
 .loadingwindow {
     position: fixed;
     top: 0;
     bottom: 0;
     left: 0;
     right: 0;
-    background-color: #eee;
+    background-color: #ccc;
+}
+
+.loadingwindow .inner {
+    background: #fff;
+    position: fixed;
+    top: 5%;
+    text-align: center;
+    width: 100%;
+    font-size: 1.2em;
+    font-family: Verdana;
 }
 
 .pointer {
     cursor: pointer;
+}
+
+.preloader {
+    width: 40px;
+    height: 40px;
+    margin: auto;
+    display: block;
+    background: none;
+    border-radius: 500px;
+    border: 8px dotted black;
+    -moz-border-left-colors: #FFF;
+    -moz-border-right-colors: #FFF;
+    /*Each rotation takes 3 seconds and our div will rotate infinitely*/
+    -ms-animation: doarotation linear 3s infinite;
+    -webkit-animation: doarotation linear 3s infinite;
+    animation: doarotation linear 3s infinite;
+}
+
+@-ms-keyframes doarotation {
+    from {
+        -ms-transform: rotate(0deg);
+    }
+    to {
+        -ms-transform: rotate(360deg);
+    }
+}
+
+@-webkit-keyframes doarotation {
+    from {
+        -webkit-transform: rotate(0deg);
+    }
+    to {
+        -webkit-transform: rotate(360deg);
+    }
+}
+
+@keyframes doarotation {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
 }

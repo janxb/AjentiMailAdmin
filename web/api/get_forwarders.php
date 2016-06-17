@@ -6,22 +6,16 @@ Request::need_parameters('email');
 
 $targets = array();
 
-$existing = false;
+MailboxIterator::forMatchingForwarder(Request::$email, function ($mailbox) {
+	global $targets;
+	foreach ($mailbox->targets as $target) {
+		if (!in_array($target->email, Config::$config->protected_forwarders)) {
+			array_push($targets, $target->email);
+		}
+	}
+	Response::$data = $targets;
+	Response::send();
+});
 
-foreach (Config::$mailconfig->forwarding_mailboxes as $mailbox) {
-    $mailbox_email = $mailbox->local . '@' . $mailbox->domain;
-    if ($mailbox_email == Request::$email) {
-		$existing = true;
-        foreach ($mailbox->targets as $target) {
-            array_push($targets, $target->email);
-        }
-    }
-}
-
-if (!$existing) {
-    Response::$error = "address_not_found";
-} else {
-    Response::$data = $targets;
-}
-
+Response::$error = "address_not_found";
 Response::send();

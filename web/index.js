@@ -1,7 +1,7 @@
 var Credentials = function (email, password) {
     this.email = email;
-    this.password = password;
-}
+    this.passwordHash = password;
+};
 
 var App = function () {
     var self = this;
@@ -11,40 +11,83 @@ var App = function () {
     self.loading = ko.observable(false);
     self.forwardersEnabled = ko.observable(false);
     self.forwarders = ko.observableArray([]);
-    self.lang = ko.observable();
+
+    self.passwordHash = ko.observable("");
 
     self.newpass1 = ko.observable("");
     self.newpass2 = ko.observable("");
     self.newforwarder = ko.observable("");
+    self.passwordemail = ko.observable("");
+
+    self.ajaxCalls = ko.observable(0);
+    self.loading = ko.computed(function () {
+        return self.ajaxCalls() > 0;
+    }, self);
+
 
     self._init = function () {
         var credentials = Cookies.getJSON("credentials");
         if (credentials !== undefined) {
             self.email(credentials.email);
-            self.password(credentials.password);
+            self.passwordHash(credentials.passwordHash);
             self._login();
         }
-    }
+        return self;
+    };
+
+    self._passwordForgotten = function () {
+        request(
+            "api/forgot_password.php",
+            {
+                email: self.passwordemail()
+            },
+            function (data) {
+                if (data.error === null) {
+                    switch (data.data) {
+                        case 'mail_sent_to_forwarders':
+                            showInfo(Translation.get('forgotpasswordsenttoforwarders'));
+                            break;
+                        case 'mail_sent_to_postmaster':
+                            showInfo(Translation.get('forgotpasswordsenttopostmaster'));
+                            break;
+                    }
+                } else {
+                    switch (data.error) {
+                        case 'address_not_found':
+                            showError(Translation.get('forgotpasswordnoaccount'));
+                            break;
+                        case 'forwarding_not_enabled':
+                            showError(Translation.get('forgotpasswordnoforwarding'));
+                            break;
+                        default:
+                            showError(Translation.get('forgotpassworderror'));
+                            break;
+                    }
+                }
+            });
+    };
 
     self._logout = function () {
         Cookies.remove("credentials");
         location.reload();
-    }
+    };
 
     self._login = function () {
+        if (self.password().length > 0) {
+            self.passwordHash(md5(self.password()));
+        }
+
         request(
             "api/authenticate.php",
-            {
-                email: self.email(),
-                auth: self.password()
-            },
+            {},
             function (data) {
                 if (data.error === null) {
                     self.authenticated(true);
-                    Cookies.set("credentials", new Credentials(self.email(), self.password()), {expires: 365});
+                    Cookies.set("credentials", new Credentials(self.email(), self.passwordHash()), {expires: 365});
                     self._fetchForwarders();
                 } else {
-                    alert(self.lang().loginfailed);
+                    Cookies.remove("credentials");
+                    showError(Translation.get('loginfailed'));
                 }
             });
     };
@@ -52,10 +95,7 @@ var App = function () {
     self._fetchForwarders = function () {
         request(
             "api/get_forwarders.php",
-            {
-                email: self.email(),
-                auth: self.password()
-            },
+            {},
             function (data) {
                 if (data.error === null) {
                     self.forwardersEnabled(true);
@@ -65,140 +105,91 @@ var App = function () {
                     self.forwardersEnabled(false);
                 }
             });
-    }
+    };
 
     self._changePassword = function () {
         if (self.newpass1() !== self.newpass2()) {
-            alert(self.lang().passwordsmustmatch);
+            showError(Translation.get('passwordsmustmatch'));
             return;
         }
 
         request(
             "api/change_password.php",
             {
-                email: self.email(),
-                auth: self.password(),
                 password: self.newpass1()
             },
             function (data) {
                 if (data.error === null) {
-                    alert(self.lang().passwordischanged);
+                    showInfo(Translation.get('passwordischanged'));
                     self.password(self.newpass1());
                     self.newpass1("");
                     self.newpass2("");
                 } else {
-                    alert(self.lang().passwordchangefailed);
+                    if (data.error === 'password_too_weak') {
+                        showError(Translation.get('weakpassword'));
+                    } else {
+                        showError(Translation.get('passwordchangefailed'));
+                    }
                 }
             });
-    }
+    };
 
     self._deleteForwarder = function (forwarder) {
         request(
             "api/remove_forwarder.php",
             {
-                email: self.email(),
-                auth: self.password(),
                 forward: forwarder
             },
             function (data) {
                 self._fetchForwarders();
             });
-    }
+    };
 
     self._addForwarder = function () {
         var emailValid = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(self.newforwarder());
 
-
         if (!emailValid) {
-            alert(self.lang().emailnotvalid);
+            showError(Translation.get('emailnotvalid'));
             return;
         }
 
         request(
             "api/add_forwarder.php",
             {
-                email: self.email(),
-                auth: self.password(),
                 forward: self.newforwarder()
             },
             function (data) {
+                if (data.error === 'forwarding_address_protected') {
+                    showError(Translation.get('emailprotected'));
+                }
                 self._fetchForwarders();
                 self.newforwarder("");
             });
-    }
+    };
+
+    var showInfo = function (text) {
+        showPopup(text, 'success');
+    };
+
+    var showError = function (text) {
+        showPopup(text, 'error');
+    };
+
+    var showPopup = function (text, type) {
+        sweetAlert("", text, type);
+    };
 
     var request = function (url, data, responseMethod) {
+        self.ajaxCalls(self.ajaxCalls() + 1);
+        if (data.email === undefined)
+            data.email = self.email();
+        data.auth = self.passwordHash();
         $.post(url, data, function (data) {
             data = $.parseJSON(data);
             responseMethod(data);
+            self.ajaxCalls(self.ajaxCalls() - 1);
         });
-    }
+    };
 };
 
-var english = {
-    login: "Login",
-    loginfailed: "Can't log in. Maybe you entered the wrong login data?",
-    forwarders: "Forwarding adresses",
-    forwardersdisabled: "Mail forwarding is not enabled for your account. Please contact your mail administrator.",
-    changepassword: "Change mailbox password",
-    delete: "Delete",
-    logintext: "Please enter your email account login details.",
-    email: "Email address",
-    password: "Password",
-    newpass1: "New password",
-    newpass2: "Repeat new password",
-    save: "Save",
-    passwordsmustmatch: "The entered passwords are not the same. Please try again..",
-    passwordischanged: "Your password has been changed.",
-    passwordchangefailed: "Can't change your password. Maybe try again later?",
-    emailnotvalid: "The entered email address is not valid!",
-    logout: "Logout",
-    headline:"Email Account Management for adress "
-}
-
-var german = {
-    login: "Login",
-    loginfailed: "Anmeldung fehlgeschlagen. Sind die Anmeldedaten korrekt?",
-    forwarders: "Email Weiterleitungen",
-    forwardersdisabled: "Email Weiterleitungen sind für den Account nicht aktiviert. Bitte an den Email Administrator wenden.",
-    changepassword: "Account-Passwort ändern",
-    delete: "Löschen",
-    logintext: "Account Login-Daten eingeben.",
-    email: "Email-Adresse",
-    password: "Passwort",
-    newpass1: "Neues Passwort",
-    newpass2: "Passwort wiederholen",
-    save: "Speichern",
-    passwordsmustmatch: "Die beiden Passwörter sind nicht identisch. Bitte erneut versuchen..",
-    passwordischanged: "Das Passwort wurde geändert.",
-    passwordchangefailed: "Passwort konnte nicht geändert werden. Bitte später erneut versuchen..",
-    emailnotvalid: "Die eingegebene Email-Adresse existiert nicht.",
-    logout: "Abmelden",
-    headline:"Email Account-Verwaltung von "
-}
-
-var greek = {
-    login: "Σύνδεση",
-    loginfailed: "Αδυναμία σύνδεσης. Μήπως έχετε δώσει λάθος στοιχεία;",
-    forwarders: "Διευθύνσεις Προώθησης",
-    forwardersdisabled: "Η προώθηση των email δεν είναι ενεργοποιημένη. Επικοινωνήστε με τον διαχειριστή.",
-    changepassword: "Αλλαγή κωδικού",
-    delete: "Διαγραφή",
-    logintext: "Πληκτρολογήστε τα στοιχεία σύνδεσης του email σας",
-    email: "Διεύθυνση Email",
-    password: "Κωδικός",
-    newpass1: "Νέος Κωδικός",
-    newpass2: "Επανάληψη Νέου Κωδικού",
-    save: "Αποθήκευση",
-    passwordsmustmatch: "Οι κωδικοί δεν είναι ίδιοι. Προσπαθήστε ξανά...",
-    passwordischanged: "Ο κωδικός σας έχει τροποποιηθεί.",
-    passwordchangefailed: "Αδυναμία αλλαγής του κωδικού. Θέλετε να δοκιμάστε αργότερα;",
-    emailnotvalid: "Δεν είναι σωστός ο κωδικός που πληκτρολογήσατε!",
-    logout: "Αποσύνδεση",
-    headline:"Διαχείριση Email για την διεύθυνση "
-}
-
-var app = new App();
-app._init();
-app.lang(german);
-ko.applyBindings(app);
+ko.applyBindings(new App()._init());
