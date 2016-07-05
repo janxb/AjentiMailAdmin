@@ -7,6 +7,19 @@ class Config
 	public static $mailconfig;
 	public static $basepath;
 
+	public static function unblock_ip($ip)
+	{
+		if (Config::$config->fail2ban_enabled) {
+			$ipWasBlocked = false;
+			foreach (Config::$config->fail2ban_jails as $jail) {
+				$output = trim(Config::remote_command('unblockFail2ban' . ' ' . $jail . ' ' . $ip));
+				if ($output == $ip)
+					$ipWasBlocked = true;
+			}
+			return $ipWasBlocked;
+		}
+	}
+
 	public static function load()
 	{
 		if (self::$config == null) {

@@ -1,10 +1,9 @@
-<?php define('APP_VERSION', '?_v=' . str_replace("\n", '', `svn info 2>/dev/null . | grep "Revision" | awk '{print $2}'`)); ?>
 <html>
 	<head>
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 		<title>AjentiMailAdmin</title>
 		<link rel="stylesheet" href="//cdn.jsdelivr.net/g/bootstrap@3.3.6(css/bootstrap.min.css),sweetalert@1.1.3(sweetalert.css)"/>
-		<link rel="stylesheet" href="index.css<?= APP_VERSION ?>"/>
+		<link rel="stylesheet" href="index.css"/>
 	</head>
 	<body>
 		<div data-bind="visible:!authenticated()" class="loginwindow">
@@ -70,7 +69,6 @@
 				</div>
 			</div>
 
-
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					<h3 class="panel-title" data-bind="text:Translation.get('changepassword')"></h3>
@@ -80,6 +78,18 @@
 						<input class="form-control" type="password" data-bind="attr: { placeholder:Translation.get('newpass1') }, value:newpass1">
 						<input class="form-control" type="password" data-bind="attr: { placeholder:Translation.get('newpass2') }, value:newpass2">
 						<input class="form-control btn btn-info" data-bind="value:Translation.get('save')" type="submit">
+					</form>
+				</div>
+			</div>
+
+			<div class="panel panel-default" data-bind="visible:features.fail2ban_enabled()">
+				<div class="panel-heading">
+					<h3 class="panel-title" data-bind="text:Translation.get('accountlocked')"></h3>
+				</div>
+				<div class="panel-body">
+					<form data-bind="submit:_unblockUser" class="form-group">
+						<p data-bind="text:Translation.get('accountlockexplanation')"></p>
+						<input class="form-control btn btn-link" data-bind="value:Translation.get('unlockmyaccount')" type="submit">
 					</form>
 				</div>
 			</div>
@@ -97,8 +107,8 @@
 		</div>
 
 		<script src="//cdn.jsdelivr.net/g/jquery@2.2.2,knockout@3.4.0,js-cookie@2.2.0,spinjs@2.3.2,sweetalert@1.1.3,js-md5@0.4.1"></script>
-		<script src="translations.js<?= APP_VERSION ?>"></script>
-		<script src="config.js<?= APP_VERSION ?>"></script>
-		<script src="index.js<?= APP_VERSION ?>"></script>
+		<script src="translations.js"></script>
+		<script src="config.js"></script>
+		<script src="index.js"></script>
 	</body>
 </html>

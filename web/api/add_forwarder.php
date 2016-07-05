@@ -24,13 +24,13 @@ MailboxIterator::forMatchingForwarder(Request::$email, function ($mailbox) {
 	}
 	Config::save();
 
-	if (Config::$config->forwardingmail_feature_enabled === true) {
+	if (Config::$config->notify_added_forwarders === true) {
 		$mail = new ForwardingMail();
 		$mail->to = $target->email;
 		$mail->from = Config::$config->accountmails_from;
 		$mail->sourceMailbox = Request::$email;
-		$mail->subject = Config::$config->forwardingmail_subject;
-		$mail->content = Config::$config->forwardingmail_content;
+		$mail->subject = Config::$config->forwarder_notification_subject;
+		$mail->content = Config::$config->forwarder_notification_content;
 		if (Config::$config->accountmails_bcc !== null) {
 			$mail->bcc = Config::$config->accountmails_bcc;
 		}

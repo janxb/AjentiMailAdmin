@@ -10,6 +10,9 @@ case $1 in
 	"reloadConfig")
 		ajenti-ipc vmail apply
 		;;
+	"unblockFail2ban")
+    	fail2ban-client set $2 unbanip $3
+    	;;
 	*)
 		echo "Unknown Command $1. getConfig, setConfig, reloadConfig."
 		;;

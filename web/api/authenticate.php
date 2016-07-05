@@ -9,6 +9,7 @@ $existing = false;
 MailboxIterator::forMatchingMailbox(Request::$email, function($mailbox){
 	global $existing;
 	$existing = true;
+	Response::$data['fail2ban_enabled'] = Config::$config->fail2ban_enabled;
 });
 
 if (!$existing) {

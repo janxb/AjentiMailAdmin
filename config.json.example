@@ -7,10 +7,12 @@
   "protected_forwarders": [],
   "accountmails_from": "postmaster@example.org",
   "accountmails_bcc": null,
-  "forwardingmail_feature_enabled": true,
   "forgotpassword_admin_feature_enabled": true,
-  "forwardingmail_subject": "{{source}} is forwarding emails to your account",
-  "forwardingmail_content": "Hi {{target}},\n{{source}} has included you in his email account config.\nIf this is not correct, just answer this email.",
+  "notify_added_forwarders": true,
+  "forwarder_notification_subject": "{{source}} is forwarding emails to your account",
+  "forwarder_notification_content": "Hi {{target}},\n{{source}} has included you in his email account config.\nIf this is not correct, just answer this email.",
   "passwordmail_subject": "Your Mail Password",
-  "passwordmail_content": "You have requested your Mail Account Password for the account {{email}}.\nThis is your Password: {{password}}"
-  }
+  "passwordmail_content": "You have requested your Mail Account Password for the account {{email}}.\nThis is your Password: {{password}}",
+  "fail2ban_enabled": true,
+  "fail2ban_jails": ["exim","courier"]
+}
